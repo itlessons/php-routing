@@ -1,21 +1,6 @@
 <?php
 
-/**
- *
- * <code>
- *    $generator = new UrlGenerator();
- *    $generator->add('home', '/');
- *    $generator->add('post', '/post/(:id).html');
- *
- *    $url = $generator->generate('home');
- *    $url = $generator->generate('post', array('id' => 5));
- *
- * </code>
- *
- */
-
 namespace Routing;
-
 
 class UrlGenerator
 {

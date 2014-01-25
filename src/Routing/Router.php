@@ -1,21 +1,4 @@
 <?php
-/**
- *
- *
- * <code>
- *   $router = new Router();
- *   $matcher->add('home', '/', array('ControllerObject', 'indexAction'));
- *   $matcher->register('GET', '/(xx:num).html', array('ControllerObject', 'indexAction'));
- *
- *   $method = $_SERVER['REQUEST_METHOD'];
- *   $uri = $_SERVER['REQUEST_URI'];
- *
- *   $route = $matcher->match($method, $uri);
- *
- *
- * </code>
- *
- */
 
 namespace Routing;
 

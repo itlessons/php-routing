@@ -1,23 +1,5 @@
 <?php
 
-/**
- *
- *
- * <code>
- *   $matcher = new UrlMatcher();
- *   $matcher->register('GET', '/', function() {return 'Home!';});
- *   $matcher->register('GET', '/(xx:num).html', array('ControllerObject', 'indexAction'));
- *
- *   $method = $_SERVER['REQUEST_METHOD'];
- *   $uri = $_SERVER['REQUEST_URI'];
- *
- *   $route = $matcher->match($method, $uri);
- *
- *
- * </code>
- *
- */
-
 namespace Routing;
 
 class UrlMatcher
