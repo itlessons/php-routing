@@ -1,0 +1,24 @@
+{
+    "name": "itlessons/php-routing",
+    "type": "library",
+    "description": "PHP Routing Library",
+    "keywords": ["framework"],
+    "homepage": "https://github.com/itlessons/php-routing",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "itlessons",
+            "homepage": "http://www.itlessons.info"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Routing\\": "src/Routing"
+        }
+    },
+
+    "minimum-stability": "dev"
+}
