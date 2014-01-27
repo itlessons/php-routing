@@ -64,3 +64,8 @@ You can run the unit tests with the following command:
     $ cd path/to/php-routing/
     $ composer.phar install
     $ phpunit
+
+Links
+-----
+[Система роутинга на сайте с помощью PHP](http://www.itlessons.info/php/routing-library/)
+[Base example](http://demos.itlessons.info/res/024-php-routing.zip)
