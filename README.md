@@ -56,6 +56,26 @@ You can use url generator standalone:
 
     $url = $generator->generate('profile', array('id' => 888), true);
 
+
+REQUEST CLASS HELPER
+--------------------
+
+You can use simple request class to find pathInfo.
+
+    use Routing\Router;
+    use Routing\Request;
+
+    $request = new Request();
+
+    $router = new Router($request->getHTTPHost());
+
+    $router->add('home', '/', 'controller:action');
+    $router->add('hello', '/hello', 'static:welcome', 'GET');
+    $router->add('profile', '/user(id:num)', 'profile:index', 'GET|POST');
+
+    $route = $router->match($request->getMethod(), $request->getPathInfo());
+
+
 Resources
 ---------
 
