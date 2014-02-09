@@ -2,7 +2,7 @@
     "name": "itlessons/php-routing",
     "type": "library",
     "description": "PHP Routing Library",
-    "keywords": ["framework"],
+    "keywords": ["routing", "router", "URL", "URI"],
     "homepage": "https://github.com/itlessons/php-routing",
     "license": "MIT",
     "authors": [
@@ -19,6 +19,6 @@
             "Routing\\": "src/Routing"
         }
     },
-
+    "version": "0.0.1",
     "minimum-stability": "dev"
 }

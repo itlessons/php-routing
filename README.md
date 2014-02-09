@@ -60,7 +60,7 @@ You can use url generator standalone:
 REQUEST CLASS HELPER
 --------------------
 
-You can use simple request class to find pathInfo.
+You can use simple request class to find pathInfo:
 
     use Routing\Router;
     use Routing\Request;
