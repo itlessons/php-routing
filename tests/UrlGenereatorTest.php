@@ -50,6 +50,7 @@ class UrlGenereatorTest extends \PHPUnit_Framework_TestCase
         $generator = new \Routing\UrlGenerator($this->host);
         $generator->add('user', '/id(:id).html');
         $generator->add('confirm', '/confirm/(:user_id)-(:code)');
+        $generator->add('blog', '/blog/(:page:?)');
 
         $this->assertSame('/id888.html', $generator->generate('user', array('id' => 888)));
 
@@ -61,5 +62,17 @@ class UrlGenereatorTest extends \PHPUnit_Framework_TestCase
                 'code' => 'some-code88'
             )
         ));
+
+        $this->assertSame('/blog/1', $generator->generate('blog', array('page' => 1)));
+        $this->assertSame('/blog', $generator->generate('blog'));
+    }
+
+    public function testRouterGenerator()
+    {
+        $router = new \Routing\Router($this->host);
+        $router->add('blog', '/blog/(page:num:?)', 'app:blog:index');
+
+        $this->assertSame('/blog/1', $router->generate('blog', array('page' => 1)));
+        $this->assertSame('/blog', $router->generate('blog'));
     }
 } 

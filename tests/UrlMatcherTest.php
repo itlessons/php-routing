@@ -38,6 +38,7 @@ class UrlMatcherTest extends \PHPUnit_Framework_TestCase
         $matcher->register('GET', '/tag/(tag:any)', 'app:tag:index');
         $matcher->register('GET', '/', 'app:home:index');
         $matcher->register('GET', '/blog/', 'app:blog:index');
+        $matcher->register('GET', '/some/(page:num:?)', 'app:some:index');
 
         $route = $matcher->match('GET', '/id777');
         $this->assertSame('app:user:index', $route->getController());
@@ -78,5 +79,15 @@ class UrlMatcherTest extends \PHPUnit_Framework_TestCase
 
         $route = $matcher->match('GET', '/blog/');
         $this->assertSame('app:blog:index', $route->getController());
+
+        $route = $matcher->match('GET', '/some/1');
+        $this->assertSame('app:some:index', $route != null ? $route->getController() : 'false');
+
+        $route = $matcher->match('GET', '/some');
+        $this->assertSame('app:some:index', $route != null ? $route->getController() : 'false');
+
+        $route = $matcher->match('GET', '/some/');
+        $this->assertNull($route);
+        $this->assertSame('/some', $matcher->getRedirectUrl());
     }
 } 

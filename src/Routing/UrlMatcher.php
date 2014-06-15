@@ -61,7 +61,16 @@ class UrlMatcher
             return $route;
         }
 
-        return preg_replace_callback('#\((\w+):(\w+)\)#', array($this, 'replaceRoute'), $route);
+        $parse = preg_replace_callback('#/\((\w+):(\w+):\?\)$#', array($this, 'replaceOptionalRoute'), $route);
+        return preg_replace_callback('#\((\w+):(\w+)\)#', array($this, 'replaceRoute'), $parse);
+    }
+
+    private function replaceOptionalRoute($match)
+    {
+        $name = $match[1];
+        $pattern = $match[2];
+
+        return '(?:/(?<' . $name . '>' . strtr($pattern, $this->patterns) . '))?';
     }
 
     private function replaceRoute($match)
@@ -86,18 +95,24 @@ class UrlMatcher
         if ($route != null)
             return $route;
 
-        if ($method != 'GET')
-            return;
+        if ($method == 'GET')
+            $this->tryFindUrlToRedirect($uri);
+    }
 
-        # /blog/ -> /blog if /blog exists
-        # /blog -> /blog/ if /blog/ exists
-        if (substr($uri, -1) === '/') {
+    /**
+     * Try find similar url, e.g.
+     *   /blog/ -> /blog if /blog exists
+     *   /blog -> /blog/ if /blog/ exists
+     * @param $uri
+     */
+    private function tryFindUrlToRedirect($uri)
+    {
+        $tmpUri = $uri . '/';
+
+        if (substr($uri, -1) === '/')
             $tmpUri = rtrim($uri, '/');
-        } else {
-            $tmpUri = $uri . '/';
-        }
 
-        $route = $this->doMatch($method, $tmpUri);
+        $route = $this->doMatch('GET', $tmpUri);
         if ($route)
             $this->redirectUrl = $tmpUri;
     }
@@ -146,4 +161,6 @@ class UrlMatcher
 
         return $parameters;
     }
+
+
 }

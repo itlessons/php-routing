@@ -61,7 +61,8 @@ class Router
         if (null == $this->generator) {
             $this->generator = new UrlGenerator($this->host);
             foreach ($this->routes as $name => $route) {
-                $pattern = preg_replace('#\((\w+):(\w+)\)#', '(:$1)', $route['pattern']);
+                $pattern = preg_replace('#\((\w+):(\w+):\?\)#', '(:$1:?)', $route['pattern']);
+                $pattern = preg_replace('#\((\w+):(\w+)\)#', '(:$1)', $pattern);
                 $this->generator->add($name, $pattern);
             }
         }

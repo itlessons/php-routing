@@ -6,6 +6,7 @@ class UrlGenerator
 {
     private $map = array();
     private $mapData = array();
+    private $mapOptionalData = array();
     private $host;
 
     public function __construct($host)
@@ -56,12 +57,20 @@ class UrlGenerator
             if (isset($this->mapData[$name][$k])) {
                 $rName = '(:' . $k . ')';
                 $rParameters[$rName] = $v;
+            } elseif (isset($this->mapOptionalData[$name][$k])) {
+                $rName = '(:' . $k . ':?)';
+                $rParameters[$rName] = $v;
             } else {
                 $extra[$k] = $v;
             }
         }
 
         $url = strtr($pattern, $rParameters);
+
+        // clean blank optional placeholder
+        if (false !== strpos($url, '/(:')) {
+            $url = preg_replace('#/\(:(\w+):\?\)$#', '', $url);
+        }
 
         if (count($extra)) {
             $url .= '?' . http_build_query($extra);
@@ -83,10 +92,13 @@ class UrlGenerator
         $pattern = $this->map[$name];
         $matches = array();
 
+        $this->mapData[$name] = array();
+        $this->mapOptionalData[$name] = array();
+
         if (preg_match_all('#\(:(\w+)\)#', $pattern, $matches)) {
             $this->mapData[$name] = array_flip($matches[1]);
-        } else {
-            $this->mapData[$name] = array();
+        } elseif (preg_match_all('#/\(:(\w+):\?\)$#', $pattern, $matches)) {
+            $this->mapOptionalData[$name] = array_flip($matches[1]);
         }
     }
-} 
+}

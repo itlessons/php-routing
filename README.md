@@ -41,11 +41,6 @@ You can use url matcher standalone:
 
     $route = $router->match('GET', '/hello');
 
-    // redirect if need (e.g /blog -> /blog/ if /blog/ exists)
-    if($matcher->isNeedRedirect()){
-        redirect($matcher->getRedirectUrl(), 302);
-    }
-
 
 URL Generating Only
 -------------------
@@ -60,6 +55,54 @@ You can use url generator standalone:
     $generator->add('profile', '/user(:id)');
 
     $url = $generator->generate('profile', array('id' => 888), true);
+
+
+Optional Last Placeholder
+-------------------------
+
+You can specify optional placeholder in the end of pattern:
+
+    use Routing\Router;
+
+    $host = 'http://domain.tld';
+
+    $router = new Router($host);
+    $router->add('blog', '/blog/(page:num:?)', 'controller:action');
+
+    // match
+    $route = $router->match('GET', '/blog');
+    $route = $router->match('GET', '/blog/1');
+
+    // generate
+    $router->generate('blog'); => /blog
+    $router->generate('blog',  array('page' => 1)); => /blog/1
+
+
+Similar Routes
+--------------
+
+You can use redirect on similar route (e.g /blog -> /blog/ if /blog/ exists):
+
+    use Routing\Router;
+
+    $host = 'http://domain.tld';
+
+    $router = new Router($host);
+    $router->add('home', '/', 'controller:action');
+    $router->add('hello', '/hello', 'static:welcome');
+    $router->add('profile', '/blog/', 'profile:index');
+
+    $route = $router->match('GET', '/hello/');
+    if($router->getMatcher()->isNeedRedirect()){
+        // need redirect to /hello
+        redirect($router->getMatcher()->getRedirectUrl(), 302);
+    }
+
+    $route = $router->match('GET', '/blog');
+    if($router->getMatcher()->isNeedRedirect()){
+        // need redirect to /blog/
+        redirect($router->getMatcher()->getRedirectUrl(), 302);
+    }
 
 
 REQUEST CLASS HELPER
