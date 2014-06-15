@@ -61,5 +61,14 @@ class UrlMatcherTest extends \PHPUnit_Framework_TestCase
 
         $route = $matcher->match('GET', '/tag/so-mew_ord90');
         $this->assertSame('app:tag:index', $route->getController());
+
+        $route = $matcher->match('GET', '/tag/so-mew_ord90/');
+        $this->assertNull($route);
+        $this->assertTrue($matcher->isNeedRedirect());
+        $this->assertSame('/tag/so-mew_ord90', $matcher->getRedirectUrl());
+
+        $route = $matcher->match('GET', '/id777/');
+        $this->assertNull($route);
+        $this->assertSame('/id777', $matcher->getRedirectUrl());
     }
 } 

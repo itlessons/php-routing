@@ -41,6 +41,11 @@ You can use url matcher standalone:
 
     $route = $router->match('GET', '/hello');
 
+    // redirect if need (e.g /blog -> /blog/ if /blog/ exists)
+    if($matcher->isNeedRedirect()){
+        redirect($matcher->getRedirectUrl(), 302);
+    }
+
 
 URL Generating Only
 -------------------
@@ -87,6 +92,5 @@ You can run the unit tests with the following command:
 
 Links
 -----
-[Система роутинга на сайте с помощью PHP](http://www.itlessons.info/php/routing-library/)
-
-[Base example source](http://demos.itlessons.info/res/024-php-routing.zip)
+* [Система роутинга на сайте с помощью PHP](http://www.itlessons.info/php/routing-library/)
+* [Base example source](http://demos.itlessons.info/res/024-php-routing.zip)

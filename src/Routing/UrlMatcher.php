@@ -27,6 +27,8 @@ class UrlMatcher
         'any' => '[a-zA-Z0-9\.\-_%]+',
     );
 
+    private $redirectUrl;
+
     public function addPattern($name, $pattern)
     {
         $this->patterns[$name] = $pattern;
@@ -77,14 +79,34 @@ class UrlMatcher
      */
     public function match($method, $uri)
     {
+        $this->redirectUrl = null;
         $method = strtoupper($method);
-        $routes = $this->routes($method);
+        $route = $this->doMatch($method, $uri);
 
-        if (array_key_exists($uri, $routes)) {
-            return new MatchedRoute($routes[$uri]);
+        if ($route != null)
+            return $route;
+
+        # /blog/ -> /blog if /blog exists
+        # /blog -> /blog/ if /blog/ exists
+        if (substr($uri, -1) === '/') {
+            $tmpUri = rtrim($uri, '/');
+        } else {
+            $tmpUri = $uri . '/';
         }
 
-        return $this->doMatch($method, $uri);
+        $route = $this->doMatch($method, $tmpUri);
+        if ($route)
+            $this->redirectUrl = $tmpUri;
+    }
+
+    public function isNeedRedirect()
+    {
+        return $this->redirectUrl != null;
+    }
+
+    public function getRedirectUrl()
+    {
+        return $this->redirectUrl;
     }
 
     private function routes($method)
@@ -94,7 +116,13 @@ class UrlMatcher
 
     private function doMatch($method, $uri)
     {
-        foreach ($this->routes($method) as $route => $controller) {
+        $routes = $this->routes($method);
+
+        if (array_key_exists($uri, $routes)) {
+            return new MatchedRoute($routes[$uri]);
+        }
+
+        foreach ($routes as $route => $controller) {
             if (false !== strpos($route, '(')) {
                 $pattern = '#^' . $route . '$#s';
 

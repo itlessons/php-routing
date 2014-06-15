@@ -41,7 +41,7 @@ class Router
     /**
      * @return UrlMatcher
      */
-    private function getMatcher()
+    public function getMatcher()
     {
         if (null == $this->mather) {
             $this->mather = new UrlMatcher();
@@ -56,7 +56,7 @@ class Router
     /**
      * @return UrlGenerator
      */
-    private function getGenerator()
+    public function getGenerator()
     {
         if (null == $this->generator) {
             $this->generator = new UrlGenerator($this->host);
