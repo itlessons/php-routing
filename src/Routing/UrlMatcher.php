@@ -86,6 +86,9 @@ class UrlMatcher
         if ($route != null)
             return $route;
 
+        if ($method != 'GET')
+            return;
+
         # /blog/ -> /blog if /blog exists
         # /blog -> /blog/ if /blog/ exists
         if (substr($uri, -1) === '/') {
