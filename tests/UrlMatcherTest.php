@@ -90,4 +90,13 @@ class UrlMatcherTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($route);
         $this->assertSame('/some', $matcher->getRedirectUrl());
     }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testExceptionOptionalPlaceholder()
+    {
+        $matcher = new \Routing\UrlMatcher();
+        $matcher->register('GET', '/(id:num:?)', 'app:some:index');
+    }
 } 

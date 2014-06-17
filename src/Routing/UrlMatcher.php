@@ -61,7 +61,12 @@ class UrlMatcher
             return $route;
         }
 
+        if (preg_match('#^/\((\w+):(\w+):\?\)$#', $route)) {
+            throw new \InvalidArgumentException(sprintf('Prefix required when use optional placeholder in route "%s"', $route));
+        }
+
         $parse = preg_replace_callback('#/\((\w+):(\w+):\?\)$#', array($this, 'replaceOptionalRoute'), $route);
+
         return preg_replace_callback('#\((\w+):(\w+)\)#', array($this, 'replaceRoute'), $parse);
     }
 
@@ -161,6 +166,4 @@ class UrlMatcher
 
         return $parameters;
     }
-
-
 }
