@@ -99,4 +99,33 @@ class UrlMatcherTest extends \PHPUnit_Framework_TestCase
         $matcher = new \Routing\UrlMatcher();
         $matcher->register('GET', '/(id:num:?)', 'app:some:index');
     }
+
+    public function testCacheToFile()
+    {
+        $file = __DIR__ . '/cache/routes.cached.inc.php';
+
+        if (is_file($file))
+            unlink($file);
+
+        $matcher = new \Routing\UrlMatcher();
+
+        if (!$matcher->loadFromFile($file)) {
+            $matcher->register('GET', '/id(id:num)', 'app:user:index');
+            $matcher->register('GET', '/search/(query:str)', 'app:search:index');
+            $matcher->register('GET', '/tag/(tag:any)', 'app:tag:index');
+            $matcher->register('GET', '/', 'app:home:index');
+            $matcher->register('GET', '/blog/', 'app:blog:index');
+            $matcher->register('GET', '/some/(page:num:?)', 'app:some:index');
+            $matcher->dumpToFile($file);
+        }
+
+        $route = $matcher->match('GET', '/search/some_str');
+
+        $this->assertTrue(is_file($file));
+        $this->assertSame('app:search:index', $route != null ? $route->getController() : 'false');
+
+        $matcher = new \Routing\UrlMatcher();
+        $matcher->loadFromFile($file);
+        $this->assertSame('app:search:index', $route != null ? $route->getController() : 'false');
+    }
 } 

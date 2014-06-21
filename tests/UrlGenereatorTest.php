@@ -67,12 +67,27 @@ class UrlGenereatorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('/blog', $generator->generate('blog'));
     }
 
-    public function testRouterGenerator()
+    public function testCacheToFile()
     {
-        $router = new \Routing\Router($this->host);
-        $router->add('blog', '/blog/(page:num:?)', 'app:blog:index');
+        $file = __DIR__ . '/cache/generator.cached.inc.php';
+        $host = 'http://domain.tld';
 
-        $this->assertSame('/blog/1', $router->generate('blog', array('page' => 1)));
-        $this->assertSame('/blog', $router->generate('blog'));
+        if (is_file($file))
+            unlink($file);
+
+        $gen = new \Routing\UrlGenerator($host);
+
+        if (!$gen->loadFromFile($file)) {
+            $gen->add('user', '/id(:id).html');
+            $gen->add('confirm', '/confirm/(:user_id)-(:code)');
+            $gen->add('blog', '/blog/(:page:?)');
+            $gen->dumpToFile($file);
+        }
+
+        $this->assertSame('/id888.html', $gen->generate('user', array('id' => 888)));
+
+        $gen = new \Routing\UrlGenerator($host);
+        $gen->loadFromFile($file);
+        $this->assertSame('/id777.html', $gen->generate('user', array('id' => 777)));
     }
 } 

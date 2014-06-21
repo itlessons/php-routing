@@ -104,8 +104,24 @@ You can use redirect on similar route (e.g /blog -> /blog/ if /blog/ exists):
         redirect($router->getMatcher()->getRedirectUrl(), 302);
     }
 
+Cache Compiled Data
+-------------------
 
-REQUEST CLASS HELPER
+You can cache compiled rules to files for performance:
+
+    use Routing\Router;
+    use Routing\Request;
+
+    $request = new Request();
+
+    $router = new Router($request->getHTTPHost());
+    $router->useCache(__DIR__.'/matcher.cache.php', __DIR__.'/generator.cache.php');
+    $router->add('home', '/', 'controller:action');
+    // ...
+    $route = $router->match($request->getMethod(), $request->getPathInfo());
+
+
+Request Class Helper
 --------------------
 
 You can use simple request class to find pathInfo:

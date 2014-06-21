@@ -3,6 +3,7 @@ composer.lock
 composer.phar
 phpunit.xml
 .idea
+tests/cache/*
 
 #################
 ## Eclipse
@@ -220,3 +221,4 @@ pip-log.txt
 #Mr Developer
 .mr.developer.cfg
 cases.txt
+

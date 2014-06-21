@@ -166,4 +166,24 @@ class UrlMatcher
 
         return $parameters;
     }
+
+    public function dumpToFile($file)
+    {
+        $code = '<?php return ' . var_export($this->routes, true) . ';';
+        Utils::writeFile($file, $code);
+    }
+
+    /**
+     * @param $file
+     * @return bool
+     */
+    public function loadFromFile($file)
+    {
+        if (is_file($file)) {
+            $this->routes = require $file;
+            return true;
+        }
+
+        return false;
+    }
 }

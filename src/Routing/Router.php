@@ -6,8 +6,10 @@ class Router
 {
     private $routes = array();
     private $host;
-    private $mather;
+    private $matcher;
     private $generator;
+    private $matcherCacheFile;
+    private $generatorCacheFile;
 
     public function __construct($host)
     {
@@ -43,14 +45,24 @@ class Router
      */
     public function getMatcher()
     {
-        if (null == $this->mather) {
-            $this->mather = new UrlMatcher();
-            foreach ($this->routes as $route) {
-                $this->mather->register($route['method'], $route['pattern'], $route['controller']);
+        if (null == $this->matcher) {
+            $this->matcher = new UrlMatcher();
+
+            if ($this->matcherCacheFile && $this->matcher->loadFromFile($this->matcherCacheFile)) {
+                return $this->matcher;
             }
+
+            foreach ($this->routes as $route) {
+                $this->matcher->register($route['method'], $route['pattern'], $route['controller']);
+            }
+
+            if ($this->matcherCacheFile) {
+                $this->matcher->dumpToFile($this->matcherCacheFile);
+            }
+
         }
 
-        return $this->mather;
+        return $this->matcher;
     }
 
     /**
@@ -60,13 +72,28 @@ class Router
     {
         if (null == $this->generator) {
             $this->generator = new UrlGenerator($this->host);
+
+            if ($this->generatorCacheFile && $this->generator->loadFromFile($this->generatorCacheFile)) {
+                return $this->generator;
+            }
+
             foreach ($this->routes as $name => $route) {
                 $pattern = preg_replace('#\((\w+):(\w+):\?\)#', '(:$1:?)', $route['pattern']);
                 $pattern = preg_replace('#\((\w+):(\w+)\)#', '(:$1)', $pattern);
                 $this->generator->add($name, $pattern);
             }
+
+            if ($this->generatorCacheFile) {
+                $this->generator->dumpToFile($this->generatorCacheFile);
+            }
         }
 
         return $this->generator;
+    }
+
+    public function useCache($matcherCacheFile, $generatorCacheFile)
+    {
+        $this->matcherCacheFile = $matcherCacheFile;
+        $this->generatorCacheFile = $generatorCacheFile;
     }
 }

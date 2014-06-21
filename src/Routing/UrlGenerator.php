@@ -101,4 +101,34 @@ class UrlGenerator
             $this->mapOptionalData[$name] = array_flip($matches[1]);
         }
     }
+
+    public function dumpToFile($file)
+    {
+        //preCompile
+        foreach ($this->map as $name => $v) {
+            $this->compilePattern($name);
+        }
+
+        $code = '<?php return array('
+            . var_export($this->map, true) . ','
+            . var_export($this->mapData, true) . ','
+            . var_export($this->mapOptionalData, true)
+            . ');';
+
+        Utils::writeFile($file, $code);
+    }
+
+    /**
+     * @param $file
+     * @return bool
+     */
+    public function loadFromFile($file)
+    {
+        if (is_file($file)) {
+            list($this->map, $this->mapData, $this->mapOptionalData) = require $file;
+            return true;
+        }
+
+        return false;
+    }
 }
