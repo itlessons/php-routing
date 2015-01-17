@@ -131,4 +131,9 @@ class UrlGenerator
 
         return false;
     }
+
+    public function setHost($host)
+    {
+        $this->host = $host;
+    }
 }

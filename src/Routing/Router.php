@@ -11,10 +11,11 @@ class Router
     private $matcherCacheFile;
     private $generatorCacheFile;
 
-    public function __construct($host)
+    public function __construct($host = null)
     {
         $this->host = $host;
     }
+
 
     public function add($name, $pattern, $controller, $method = 'GET')
     {
@@ -95,5 +96,14 @@ class Router
     {
         $this->matcherCacheFile = $matcherCacheFile;
         $this->generatorCacheFile = $generatorCacheFile;
+    }
+
+    public function setHost($host)
+    {
+        $this->host = $host;
+
+        if ($this->generator) {
+            $this->generator->setHost($host);
+        }
     }
 }
